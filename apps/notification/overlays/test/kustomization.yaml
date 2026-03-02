@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+# Namespace applied to all resources in this overlay.
+# Format: <service-namespace>-<environment>
+namespace: ride-hailing-test
+
+# Image tag is updated here by Jenkins CI after each successful build.
+images:
+  - name: docker.io/ama2352/notification-service
+    newTag: "latest"
+
+commonLabels:
+  environment: test
+  # Enables Istio sidecar injection for all pods in this overlay.
+  istio-injection: enabled

@@ -1,0 +1,31 @@
+# Root App of Apps — apply once to bootstrap the entire platform.
+# ArgoCD discovers every Application in platform/argocd/ and reconciles them all.
+#
+#   kubectl apply -f root-app.yaml -n argocd
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: root
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: ride-hail-platform
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/ama2352/ride-hail-gitops.git
+    targetRevision: main
+    path: platform/argocd
+    directory:
+      recurse: true
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true

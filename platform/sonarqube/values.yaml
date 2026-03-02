@@ -1,0 +1,42 @@
+# SonarQube Helm values — sonarqube namespace, NodePort 30090.
+# Bundled PostgreSQL enabled (H2 is deprecated in SonarQube 10.x).
+edition: community
+
+image:
+  tag: "10.7.0-community"
+
+# NodePort 30090. Default credentials: admin / admin (change on first login).
+service:
+  type: NodePort
+  nodePort: 30090
+
+resources:
+  requests:
+    cpu: 500m
+    memory: "1536Mi"
+  limits:
+    cpu: "1"
+    memory: "2Gi"
+
+# Persistence disabled — analysis history lost on restart.
+# To preserve data: install local-path-provisioner or create a matching PV.
+persistence:
+  enabled: false
+
+# mmap disabled for resource-constrained environments.
+sonarProperties:
+  sonar.search.javaAdditionalOpts: "-Dnode.store.allow_mmap=false"
+
+# Bundled PostgreSQL. Production: use an external managed instance.
+postgresql:
+  enabled: true
+  primary:
+    persistence:
+      enabled: false
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 200m
+        memory: 512Mi

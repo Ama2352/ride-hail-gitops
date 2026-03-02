@@ -1,0 +1,50 @@
+# Grafana Helm values — monitoring namespace, NodePort 30300.
+image:
+  tag: "10.4.2"
+
+replicas: 1
+
+# NodePort 30300
+service:
+  type: NodePort
+  nodePort: 30300
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+# Persistence disabled — no dynamic provisioner on bare-metal.
+# To enable: install local-path-provisioner or create a matching PV.
+persistence:
+  enabled: false
+
+# Anonymous admin access — learning environment only.
+grafana.ini:
+  auth.anonymous:
+    enabled: true
+    org_role: Admin
+  auth:
+    disable_login_form: true
+  analytics:
+    reporting_enabled: false
+    check_for_updates: false
+  server:
+    root_url: "http://localhost:3000"
+
+# Auto-configures Prometheus as the default datasource on startup.
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        access: proxy
+        url: http://prometheus-server.monitoring.svc.cluster.local:80
+        isDefault: true
+        editable: false
+        jsonData:
+          timeInterval: "15s"

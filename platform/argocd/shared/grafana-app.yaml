@@ -1,0 +1,36 @@
+# Grafana — deployed via official Helm chart into the monitoring namespace.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: ride-hail-platform
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  sources:
+    - repoURL: https://grafana.github.io/helm-charts
+      chart: grafana
+      targetRevision: "8.*"
+      helm:
+        releaseName: grafana
+        valueFiles:
+          - $values/platform/grafana/values.yaml
+
+    - repoURL: https://github.com/ama2352/ride-hail-gitops.git
+      targetRevision: main
+      ref: values
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: monitoring
+
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+    syncOptions:
+      - CreateNamespace=true

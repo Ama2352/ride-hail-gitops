@@ -1,0 +1,46 @@
+# Istio Ingress Gateway — deploys the gateway pod (Helm) and the Gateway routing
+# resource (raw manifest). Must sync after istiod (sync-wave: 0).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-gateway
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: ride-hail-platform
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  sources:
+    # Helm chart — deploys the istio-ingressgateway pod
+    - repoURL: https://istio-release.storage.googleapis.com/charts
+      chart: gateway
+      targetRevision: "1.27.*"
+      helm:
+        releaseName: istio-ingressgateway
+        valueFiles:
+          - $values/platform/istio/gateway-values.yaml
+
+    # Provides the $values reference for the Helm chart above
+    - repoURL: https://github.com/ama2352/ride-hail-gitops.git
+      targetRevision: main
+      ref: values
+
+    # Raw manifest — deploys the Istio Gateway routing resource
+    - repoURL: https://github.com/ama2352/ride-hail-gitops.git
+      targetRevision: main
+      path: platform/istio
+      directory:
+        include: "gateway.yaml"
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-system
+
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true

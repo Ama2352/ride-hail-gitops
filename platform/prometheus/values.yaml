@@ -1,0 +1,110 @@
+# Prometheus Helm values — monitoring namespace, NodePort 30909.
+server:
+  image:
+    tag: "v2.53.0"
+
+  retention: "6h"   # short retention for resource-constrained cluster
+
+  global:
+    scrape_interval: 15s
+    evaluation_interval: 15s
+    external_labels:
+      cluster: "ridehailing-local"
+      environment: "development"
+
+  extraArgs:
+    web.enable-lifecycle: ""       # allow config reload via HTTP POST
+    web.enable-admin-api: ""       # enable admin API for management
+
+  # NodePort 30909
+  service:
+    type: NodePort
+    nodePort: 30909
+    servicePort: 9090
+
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  # Persistence disabled — 6h retention makes data loss acceptable.
+  persistentVolume:
+    enabled: false
+
+# Node Exporter — DaemonSet covers all nodes including master (standard for observability agents).
+prometheus-node-exporter:
+  hostNetwork: true
+  hostRootFsMount:
+    enabled: true
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+  # Tolerate master taint so the DaemonSet covers all nodes.
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+    - key: node-role.kubernetes.io/master
+      operator: Exists
+      effect: NoSchedule
+
+alertmanager:
+  enabled: false
+
+kube-state-metrics:
+  enabled: true
+
+# Custom scrape targets — Jenkins, Istio envoy sidecars, Istio control plane.
+extraScrapeConfigs: |
+  - job_name: 'jenkins'
+    metrics_path: /prometheus
+    scheme: http
+    static_configs:
+      - targets: ['jenkins.jenkins.svc.cluster.local:8080']
+        labels:
+          service: jenkins
+          namespace: jenkins
+
+  - job_name: 'envoy-stats'
+    metrics_path: /stats/prometheus
+    kubernetes_sd_configs:
+      - role: pod
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_container_port_name]
+        action: keep
+        regex: '.*-envoy-prom'
+      - source_labels: [__meta_kubernetes_namespace]
+        action: replace
+        target_label: namespace
+      - source_labels: [__meta_kubernetes_pod_name]
+        action: replace
+        target_label: pod
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        action: replace
+        target_label: app
+
+  - job_name: 'istio-control-plane'
+    kubernetes_sd_configs:
+      - role: endpoints
+        namespaces:
+          names:
+            - istio-system
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
+        action: keep
+        regex: istiod;http-monitoring
+      - source_labels: [__meta_kubernetes_namespace]
+        action: replace
+        target_label: namespace
+      - source_labels: [__meta_kubernetes_pod_name]
+        action: replace
+        target_label: pod

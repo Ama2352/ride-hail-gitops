@@ -1,0 +1,23 @@
+# Istio Ingress Gateway Helm values — NodePort HTTP 30080, HTTPS 30443.
+replicaCount: 1
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+# HTTP: 30080, HTTPS: 30443
+service:
+  type: NodePort
+  ports:
+    - name: http2
+      port: 80
+      targetPort: 8080
+      nodePort: 30080
+    - name: https
+      port: 443
+      targetPort: 8443
+      nodePort: 30443
