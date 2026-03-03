@@ -36,7 +36,8 @@ sonarProperties:
 postgresql:
   enabled: true
   image:
-    tag: "16.4.0-debian-12-r11"
+    repository: bitnami/postgresql
+    tag: "latest"
   primary:
     persistence:
       enabled: true
