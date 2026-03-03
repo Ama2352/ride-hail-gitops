@@ -48,3 +48,11 @@ postgresql:
       limits:
         cpu: 200m
         memory: 512Mi
+
+# Readiness and startup probes — allow extra time for SonarQube to initialize.
+readinessProbe:
+  initialDelaySeconds: 60
+  failureThreshold: 6
+startupProbe:
+  initialDelaySeconds: 60
+  failureThreshold: 24 # Cho phép chờ lên đến vài phút
