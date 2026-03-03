@@ -13,7 +13,7 @@ service:
 resources:
   requests:
     cpu: 500m
-    memory: "1536Mi"
+    memory: "1024Mi"
   limits:
     cpu: "1"
     memory: "2Gi"

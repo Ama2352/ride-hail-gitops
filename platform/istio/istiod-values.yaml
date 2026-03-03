@@ -25,11 +25,3 @@ global:
       limits:
         cpu: 100m
         memory: 128Mi
-
-spec:
-  ignoreDifferences:
-    - group: admissionregistration.k8s.io
-      kind: ValidatingWebhookConfiguration
-      name: istiod-default-validator
-      jsonPointers:
-        - /webhooks/0/failurePolicy
