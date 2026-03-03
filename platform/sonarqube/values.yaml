@@ -35,9 +35,11 @@ sonarProperties:
 # Bundled PostgreSQL. Production: use an external managed instance.
 postgresql:
   enabled: true
+  image:
+    tag: "17"
   primary:
     persistence:
-      enabled: false
+      enabled: true
     resources:
       requests:
         cpu: 100m
