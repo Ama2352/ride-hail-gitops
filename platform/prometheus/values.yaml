@@ -28,7 +28,6 @@ server:
       environment: "development"
 
   extraArgs:
-    web.enable-lifecycle: ""       # allow config reload via HTTP POST
     web.enable-admin-api: ""       # enable admin API for management
 
   # NodePort 30909
