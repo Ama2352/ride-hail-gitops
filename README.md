@@ -9,16 +9,16 @@
 
 ```
 ┌─────────────────────┐     ┌──────────────────────┐     ┌─────────────────────┐
-│  ride-hail-platform │     │  ride-hail-services  │     │   ride-hail-gitops   │
+│  ride-hail-platform │     │  ride-hail-services  │     │  ride-hail-gitops   │
 │      (Repo 1)       │     │      (Repo 2)        │     │  >>> THIS REPO <<<  │
 │                     │     │                      │     │                     │
 │  Vagrant, Ansible,  │     │  Go source code,     │     │  K8s manifests,     │
 │  K8s bootstrap,     │     │  Dockerfiles,        │     │  Helm values,       │
 │  ArgoCD install     │     │  Jenkinsfile (CI)    │     │  ArgoCD App defs    │
-└─────────────────────┘     └──────────▼──────────┘     └──────────▲──────────┘
-                                    │  git commit image tag      │
-                                    └──────────────────────────►┘
-                                           ArgoCD reconciles
+└─────────────────────┘     └──────────┬───────────┘     └──────────▲──────────┘
+                                       │  git commit image tag      │
+                                       └───────────────────────────►┘
+                                              ArgoCD reconciles
 ```
 
 No `kubectl apply` or `helm install` is ever run manually after Day 0.
@@ -26,7 +26,7 @@ All cluster state flows through git commits to this repository.
 
 ---
 
-## Directory Structure
+## Repository Structure
 
 ```
 ride-hail-gitops/
@@ -151,3 +151,25 @@ via `managedNamespaceMetadata` in both service apps.
 
 No branching required. Environments are isolated by directory, not by git branch
 (Global Principle #4 — Folders over Branches).
+
+---
+
+## Key Design Decisions
+
+| Decision | Rationale |
+|---|---|
+| App of Apps pattern | `root-app.yaml` bootstraps everything; ArgoCD discovers all apps recursively |
+| Kustomize overlays for environments | Base manifests stay DRY; overlays change only namespace and image tag |
+| Helm values in git | Platform tools use upstream Helm charts; values files are the only customization |
+| Sync waves for ordering | Istio base → istiod → gateway → services; prevents race conditions |
+| `CreateNamespace=true` | ArgoCD creates namespaces declaratively; no manual pre-provisioning |
+| Folders over branches | Environments are directories, not git branches (Principle #4) |
+
+---
+
+## Global Principles
+
+1. **Declarative** — Every state is described in Git. No manual `kubectl` or ad-hoc `sh` for final cluster state.
+2. **Repo Separation** — Each repo owns a single concern: infrastructure, code, or desired state.
+3. **Pull-Based CD** — Jenkins pushes images; ArgoCD pulls manifests from Repo 3.
+4. **Folders > Branches** — Environment differences are directory overlays in Repo 3.
