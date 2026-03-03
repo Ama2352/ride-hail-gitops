@@ -23,6 +23,11 @@ resources:
 persistence:
   enabled: false
 
+# initSysctl disabled — vm.max_map_count and fs.file-max are set on the nodes
+# directly via playbook_worker.yml (/etc/sysctl.d/sonarqube.conf).
+initSysctl:
+  enabled: false
+
 # mmap disabled for resource-constrained environments.
 sonarProperties:
   sonar.search.javaAdditionalOpts: "-Dnode.store.allow_mmap=false"

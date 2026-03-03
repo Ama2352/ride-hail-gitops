@@ -1,0 +1,36 @@
+# Local Path Provisioner — Dynamically provisions PVCs using local node storage.
+# Sync wave -5 ensures this StorageClass exists BEFORE any database asks for a PVC.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: local-path-provisioner
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: ride-hail-platform
+  annotations:
+    argocd.argoproj.io/sync-wave: "-3"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/rancher/local-path-provisioner.git
+    targetRevision: v0.0.30
+    path: deploy/chart/local-path-provisioner
+    helm:
+      parameters:
+        # Cực kỳ quan trọng: Biến nó thành StorageClass mặc định của toàn cụm
+        - name: storageClass.defaultClass
+          value: "true"
+        - name: storageClass.name
+          value: "standard"
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true

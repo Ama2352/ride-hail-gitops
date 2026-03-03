@@ -1,20 +1,28 @@
-# ride-hail-gitops
+# ride-hail-gitops (Repo 3 of 3)
 
-GitOps source of truth for the Ride-Hailing platform. ArgoCD watches this
-repository and reconciles the cluster state to match every commit.
+> GitOps source of truth for the Ride-Hailing platform.
+> Part of a 3-repo GitOps architecture governed by `Global_Principles.md`.
 
 ---
 
-## Role in the 3-repo Architecture
+## Architecture Position
 
-| Repo | Purpose |
-|---|---|
-| `ride-hail-platform` | VM provisioning — Vagrant + Ansible, Kubernetes, ArgoCD bootstrap |
-| `ride-hail-services` | Application source code + Jenkins CI pipelines |
-| **`ride-hail-gitops`** | **Cluster desired state — Kustomize manifests + Helm values** |
+```
+┌─────────────────────┐     ┌──────────────────────┐     ┌─────────────────────┐
+│  ride-hail-platform │     │  ride-hail-services  │     │   ride-hail-gitops   │
+│      (Repo 1)       │     │      (Repo 2)        │     │  >>> THIS REPO <<<  │
+│                     │     │                      │     │                     │
+│  Vagrant, Ansible,  │     │  Go source code,     │     │  K8s manifests,     │
+│  K8s bootstrap,     │     │  Dockerfiles,        │     │  Helm values,       │
+│  ArgoCD install     │     │  Jenkinsfile (CI)    │     │  ArgoCD App defs    │
+└─────────────────────┘     └──────────▼──────────┘     └──────────▲──────────┘
+                                    │  git commit image tag      │
+                                    └──────────────────────────►┘
+                                           ArgoCD reconciles
+```
 
-No `kubectl apply` or `helm install` commands are ever run manually after Day 0.
-All changes flow through git commits to this repository.
+No `kubectl apply` or `helm install` is ever run manually after Day 0.
+All cluster state flows through git commits to this repository.
 
 ---
 
@@ -83,8 +91,15 @@ ride-hail-gitops/
 
 Prerequisites: ArgoCD is running in the `argocd` namespace (installed by `ride-hail-platform`).
 
+> **With `ride-hail-platform`:** Bootstrap is fully automatic — the Ansible
+> `playbook_argocd.yml` applies `root-app.yaml` directly from GitHub at the
+> end of provisioning. `vagrant up` is all you need.
+
+If you need to apply it manually (e.g. re-bootstrapping without re-provisioning):
+
 ```bash
-kubectl apply -f root-app.yaml -n argocd
+kubectl apply -n argocd \
+  -f https://raw.githubusercontent.com/ama2352/ride-hail-gitops/main/root-app.yaml
 ```
 
 ArgoCD discovers every `Application` manifest under `platform/argocd/` (recursively)
