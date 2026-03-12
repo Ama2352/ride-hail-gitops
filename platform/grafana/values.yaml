@@ -17,10 +17,13 @@ resources:
     cpu: 200m
     memory: 256Mi
 
-# Persistence disabled — no dynamic provisioner on bare-metal.
-# To enable: install local-path-provisioner or create a matching PV.
+# Persistent volume via local-path-provisioner for dashboard/config storage.
 persistence:
-  enabled: false
+  enabled: true
+  storageClassName: "standard"
+  size: 1Gi
+  accessModes:
+    - ReadWriteOnce
 
 # Anonymous admin access — learning environment only.
 grafana.ini:

@@ -5,21 +5,6 @@ server:
 
   retention: "6h"   # short retention for resource-constrained cluster
 
-  initContainers:
-    - name: volume-permissions
-      image: busybox:1.36
-      command:
-        - sh
-        - -c
-        - |
-          chown -R 65534:65534 /data
-          chmod -R g+rwX /data
-      securityContext:
-        runAsUser: 0
-      volumeMounts:
-        - name: storage-volume
-          mountPath: /data
-
   global:
     scrape_interval: 15s
     evaluation_interval: 15s
@@ -30,11 +15,12 @@ server:
   extraArgs:
     web.enable-admin-api: ""       # enable admin API for management
 
-  # NodePort 30909
+  # NodePort 30909 — ClusterIP port stays at 80 so in-cluster URLs (e.g., Grafana
+  # datasource http://prometheus-server.monitoring.svc.cluster.local:80) work.
   service:
     type: NodePort
     nodePort: 30909
-    servicePort: 9090
+    servicePort: 80
 
   resources:
     requests:
@@ -44,9 +30,14 @@ server:
       cpu: 500m
       memory: 512Mi
 
-  # Persistence disabled — 6h retention makes data loss acceptable.
+  # Persistent volume via local-path-provisioner. Prevents WAL corruption on
+  # restart and stops the crash-loop that was causing 502 timeouts from Grafana.
   persistentVolume:
-    enabled: false
+    enabled: true
+    storageClass: "standard"
+    size: 5Gi
+    accessModes:
+      - ReadWriteOnce
 
 # Node Exporter — DaemonSet covers all nodes including master (standard for observability agents).
 prometheus-node-exporter:

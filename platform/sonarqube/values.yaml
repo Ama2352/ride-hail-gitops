@@ -18,10 +18,14 @@ resources:
     cpu: "1"
     memory: "2Gi"
 
-# Persistence disabled — analysis history lost on restart.
-# To preserve data: install local-path-provisioner or create a matching PV.
+# Persistent volume via local-path-provisioner for SonarQube data directory.
+# Preserves analysis history and configuration across pod restarts.
 persistence:
-  enabled: false
+  enabled: true
+  storageClass: "standard"
+  size: 5Gi
+  accessModes:
+    - ReadWriteOnce
 
 # initSysctl disabled — vm.max_map_count and fs.file-max are set on the nodes
 # directly via playbook_worker.yml (/etc/sysctl.d/sonarqube.conf).
@@ -41,6 +45,8 @@ postgresql:
   primary:
     persistence:
       enabled: true
+      storageClass: "standard"
+      size: 5Gi
     resources:
       requests:
         cpu: 100m
