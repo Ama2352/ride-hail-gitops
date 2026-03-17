@@ -25,12 +25,12 @@ spec:
           - $values/platform/istio/gateway-values.yaml
 
     # Provides the $values reference for the Helm chart above
-    - repoURL: https://github.com/ama2352/ride-hail-gitops.git
+    - repoURL: {{ .Values.repoURL }}
       targetRevision: main
       ref: values
 
     # Raw manifest — deploys the Istio Gateway routing resource
-    - repoURL: https://github.com/ama2352/ride-hail-gitops.git
+    - repoURL: {{ .Values.repoURL }}
       targetRevision: main
       path: platform/istio
       directory:

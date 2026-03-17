@@ -1,9 +1,9 @@
-# Notification service — tracks apps/notification/overlays/dev.
+# Dispatch service — tracks apps/dispatch/overlays/dev.
 # Jenkins CI writes a new image tag to the overlay on every build.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: notification-service-dev
+  name: dispatch-service-dev
   namespace: argocd
   labels:
     app.kubernetes.io/part-of: ride-hail-services
@@ -13,9 +13,9 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/ama2352/ride-hail-gitops.git
+    repoURL: {{ .Values.repoURL }}
     targetRevision: main
-    path: apps/notification/overlays/dev
+    path: apps/dispatch/overlays/dev
 
   destination:
     server: https://kubernetes.default.svc

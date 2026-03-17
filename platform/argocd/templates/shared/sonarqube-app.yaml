@@ -1,8 +1,8 @@
-# Grafana — deployed via official Helm chart into the monitoring namespace.
+# SonarQube Community Edition + PostgreSQL — deployed via official Helm chart.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: grafana
+  name: sonarqube
   namespace: argocd
   labels:
     app.kubernetes.io/part-of: ride-hail-platform
@@ -14,21 +14,21 @@ spec:
   project: default
 
   sources:
-    - repoURL: https://grafana.github.io/helm-charts
-      chart: grafana
-      targetRevision: "8.*"
+    - repoURL: https://SonarSource.github.io/helm-chart-sonarqube
+      chart: sonarqube
+      targetRevision: "10.*"
       helm:
-        releaseName: grafana
+        releaseName: sonarqube
         valueFiles:
-          - $values/platform/grafana/values.yaml
+          - $values/platform/sonarqube/values.yaml
 
-    - repoURL: https://github.com/ama2352/ride-hail-gitops.git
+    - repoURL: {{ .Values.repoURL }}
       targetRevision: main
       ref: values
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: monitoring
+    namespace: sonarqube
 
   syncPolicy:
     automated:

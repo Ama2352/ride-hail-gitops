@@ -1,9 +1,9 @@
-# Dispatch service — tracks apps/dispatch/overlays/prod.
+# Dispatch service — tracks apps/dispatch/overlays/test.
 # Jenkins CI writes a new image tag to the overlay on every build.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: dispatch-service-prod
+  name: dispatch-service-test
   namespace: argocd
   labels:
     app.kubernetes.io/part-of: ride-hail-services
@@ -13,13 +13,13 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/ama2352/ride-hail-gitops.git
+    repoURL: {{ .Values.repoURL }}
     targetRevision: main
-    path: apps/dispatch/overlays/prod
+    path: apps/dispatch/overlays/test
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: ride-hailing-prod
+    namespace: ride-hailing-test
 
   syncPolicy:
     automated:

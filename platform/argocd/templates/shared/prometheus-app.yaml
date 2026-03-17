@@ -1,8 +1,8 @@
-# SonarQube Community Edition + PostgreSQL — deployed via official Helm chart.
+# Prometheus + Node Exporter — deployed via official Helm chart into the monitoring namespace.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: sonarqube
+  name: prometheus
   namespace: argocd
   labels:
     app.kubernetes.io/part-of: ride-hail-platform
@@ -14,21 +14,21 @@ spec:
   project: default
 
   sources:
-    - repoURL: https://SonarSource.github.io/helm-chart-sonarqube
-      chart: sonarqube
-      targetRevision: "10.*"
+    - repoURL: https://prometheus-community.github.io/helm-charts
+      chart: prometheus
+      targetRevision: "25.*"
       helm:
-        releaseName: sonarqube
+        releaseName: prometheus
         valueFiles:
-          - $values/platform/sonarqube/values.yaml
+          - $values/platform/prometheus/values.yaml
 
-    - repoURL: https://github.com/ama2352/ride-hail-gitops.git
+    - repoURL: {{ .Values.repoURL }}
       targetRevision: main
       ref: values
 
   destination:
     server: https://kubernetes.default.svc
-    namespace: sonarqube
+    namespace: monitoring
 
   syncPolicy:
     automated:

@@ -15,11 +15,13 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/ama2352/ride-hail-gitops.git
+    # repoURL: https://github.com/ama2352/ride-hail-gitops.git
+    repoURL: https://gitlab.com/ride-hailing-devsecops/gitops.git
     targetRevision: main
     path: platform/argocd
-    directory:
-      recurse: true
+    helm:
+      valueFiles:
+        - values.yaml
 
   destination:
     server: https://kubernetes.default.svc

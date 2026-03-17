@@ -1,8 +1,8 @@
-# Prometheus + Node Exporter — deployed via official Helm chart into the monitoring namespace.
+# Grafana — deployed via official Helm chart into the monitoring namespace.
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: prometheus
+  name: grafana
   namespace: argocd
   labels:
     app.kubernetes.io/part-of: ride-hail-platform
@@ -14,15 +14,15 @@ spec:
   project: default
 
   sources:
-    - repoURL: https://prometheus-community.github.io/helm-charts
-      chart: prometheus
-      targetRevision: "25.*"
+    - repoURL: https://grafana.github.io/helm-charts
+      chart: grafana
+      targetRevision: "8.*"
       helm:
-        releaseName: prometheus
+        releaseName: grafana
         valueFiles:
-          - $values/platform/prometheus/values.yaml
+          - $values/platform/grafana/values.yaml
 
-    - repoURL: https://github.com/ama2352/ride-hail-gitops.git
+    - repoURL: {{ .Values.repoURL }}
       targetRevision: main
       ref: values
 

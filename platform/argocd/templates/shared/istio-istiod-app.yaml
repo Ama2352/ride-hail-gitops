@@ -22,7 +22,7 @@ spec:
         valueFiles:
           - $values/platform/istio/istiod-values.yaml
 
-    - repoURL: https://github.com/ama2352/ride-hail-gitops.git
+    - repoURL: {{ .Values.repoURL }}
       targetRevision: main
       ref: values
 
