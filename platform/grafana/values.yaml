@@ -4,6 +4,11 @@ image:
 
 replicas: 1
 
+# local-path volume is already owned by Grafana UID/GID (472:472).
+# Disable init chown step to avoid CrashLoopBackOff on some host filesystems.
+initChownData:
+  enabled: false
+
 # NodePort 30300
 service:
   type: NodePort
@@ -51,3 +56,28 @@ datasources:
         editable: false
         jsonData:
           timeInterval: "15s"
+
+# Dashboard-as-code scaffolding.
+# 1) Put your dashboard JSON in platform/grafana/dashboards/
+# 2) Add entries under dashboards.default below.
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+      - name: default
+        orgId: 1
+        folder: ""
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/default
+
+dashboards: {}
+
+# Template usage:
+# dashboards:
+#   default:
+#     ride-hailing-overview:
+#       json: |
+#         { ...paste dashboard JSON from platform/grafana/dashboards/ride-hailing-template.json ... }
