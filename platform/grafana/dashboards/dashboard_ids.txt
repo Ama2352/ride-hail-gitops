@@ -1,0 +1,4 @@
+7639 - Istio Mesh Dashboard
+15661 - K8S Dashboard 
+1860 - Node Exporter Full
+315 - Kubernetes cluster monitoring (via Prometheus)
