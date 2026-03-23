@@ -16,7 +16,7 @@ server:
   alertmanagers:
     - static_configs:
         - targets:
-            - alertmanager.monitoring.svc.cluster.local:9093
+            - prometheus-alertmanager.monitoring.svc.cluster.local:9093
 
   extraArgs:
     web.enable-admin-api: ""       # enable admin API for management
@@ -97,6 +97,14 @@ alertmanager:
       group_wait: 30s
       group_interval: 5m
       repeat_interval: 2h
+      routes:
+        # Fast path for manual notification testing.
+        - receiver: default-receiver
+          matchers:
+            - alertname="SlackNotificationTest"
+          group_wait: 5s
+          group_interval: 30s
+          repeat_interval: 1m
     receivers:
       - name: default-receiver
         slack_configs:
@@ -169,6 +177,20 @@ serverFiles:
             annotations:
               summary: "Pod {{ $labels.namespace }}/{{ $labels.pod }} restarting frequently"
               description: "Container restarted more than 3 times in the last 15 minutes."
+
+      - name: notification-test
+        rules:
+          # Test alert for Slack pipeline verification. Remove or disable after validation.
+          - alert: SlackNotificationTest
+            expr: vector(1)
+            for: 15s
+            labels:
+              severity: info
+              namespace: monitoring
+              environment: development
+            annotations:
+              summary: "Slack notification test alert"
+              description: "This is a manual test alert to verify Alertmanager -> Slack delivery."
 
 # Custom scrape targets — Jenkins, Istio envoy sidecars, Istio control plane.
 extraScrapeConfigs: |
