@@ -17,6 +17,13 @@ spec:
       targetRevision: 18.*
       helm:
         releaseName: redis
+        parameters:
+          - name: image.registry
+            value: docker.io
+          - name: image.repository
+            value: bitnamilegacy/redis
+          - name: image.tag
+            value: 8.2.1-debian-12-r0
         valueFiles:
           - $values/platform/redis/values.yaml
     - repoURL: '{{ .Values.repoURL }}'
