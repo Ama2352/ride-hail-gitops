@@ -9,7 +9,7 @@ resources:
     cpu: 200m
     memory: 128Mi
 
-# HTTP: 30080, HTTPS: 30443
+# HTTP: 30800, HTTPS: 30443
 service:
   type: NodePort
   ports:
