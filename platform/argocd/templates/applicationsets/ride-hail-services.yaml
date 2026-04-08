@@ -1,0 +1,60 @@
+# ApplicationSet: dispatch, notification, and user services (all envs).
+# Replaces per-env Application manifests under templates/dev|test|prod.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: ride-hail-services
+  namespace: argocd
+  labels:
+    app.kubernetes.io/part-of: ride-hail-services
+spec:
+  generators:
+    - list:
+        elements:
+          - appName: dispatch-service-dev
+            path: apps/dispatch/overlays/dev
+            destNamespace: ride-hailing-dev
+          - appName: dispatch-service-test
+            path: apps/dispatch/overlays/test
+            destNamespace: ride-hailing-test
+          - appName: dispatch-service-prod
+            path: apps/dispatch/overlays/prod
+            destNamespace: ride-hailing-prod
+          - appName: notification-service-dev
+            path: apps/notification/overlays/dev
+            destNamespace: ride-hailing-dev
+          - appName: notification-service-test
+            path: apps/notification/overlays/test
+            destNamespace: ride-hailing-test
+          - appName: notification-service-prod
+            path: apps/notification/overlays/prod
+            destNamespace: ride-hailing-prod
+          - appName: user-service-dev
+            path: apps/user/overlays/dev
+            destNamespace: ride-hailing-dev
+  template:
+    metadata:
+      name: '{{ "{{appName}}" }}'
+      namespace: argocd
+      labels:
+        app.kubernetes.io/part-of: ride-hail-services
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: default
+      source:
+        repoURL: '{{ .Values.repoURL }}'
+        targetRevision: main
+        path: '{{ "{{path}}" }}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{ "{{destNamespace}}" }}'
+      syncPolicy:
+        automated:
+          selfHeal: true
+          prune: true
+        managedNamespaceMetadata:
+          labels:
+            istio-injection: enabled
+        syncOptions:
+          - CreateNamespace=true
