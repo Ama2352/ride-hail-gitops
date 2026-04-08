@@ -11,7 +11,7 @@ namespace: ride-hailing-dev
 # Image tag is updated here by Jenkins CI after each successful build.
 images:
   - name: docker.io/ama2352/notification-service
-    newTag: "25-d5bea2a4"
+    newTag: "28-33ac1897"
 
 commonLabels:
   environment: dev
