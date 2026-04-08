@@ -3,7 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - sealed-secret-rsa-keys.yaml
+  - sealed-secrets.yaml
 
 # Namespace applied to all resources in this overlay.
 # Format: <service-namespace>-<environment>
