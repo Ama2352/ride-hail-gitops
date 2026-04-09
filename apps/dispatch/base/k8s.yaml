@@ -38,6 +38,8 @@ spec:
                   fieldPath: metadata.labels['version']
             - name: PUBLIC_KEY_PATH
               value: "/etc/keys/public.pem"
+            - name: REDIS_ADDR
+              value: "redis-master.redis.svc.cluster.local:6379"
           volumeMounts:
             - name: keys-volume
               mountPath: /etc/keys
