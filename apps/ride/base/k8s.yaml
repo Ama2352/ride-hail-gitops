@@ -19,7 +19,7 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - name: http
-          containerPort: 8080
+          containerPort: 8082
         env:
         - name: SPRING_DATASOURCE_URL
           value: "jdbc:postgresql://postgres:5432/rides"
@@ -34,19 +34,27 @@ spec:
               name: ride-db-credentials
               key: password
         - name: SPRING_REDIS_HOST
-          value: "redis"
+          value: "redis-master.redis.svc.cluster.local"
         - name: SPRING_REDIS_PORT
           value: "6379"
+        - name: PORT
+          value: "8082"
+        startupProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8082
+          failureThreshold: 30
+          periodSeconds: 5
         livenessProbe:
           httpGet:
-            path: /health
-            port: 8080
-          initialDelaySeconds: 30
+            path: /actuator/health/liveness
+            port: 8082
+          initialDelaySeconds: 20
           periodSeconds: 10
         readinessProbe:
           httpGet:
-            path: /health
-            port: 8080
+            path: /actuator/health/readiness
+            port: 8082
           initialDelaySeconds: 10
           periodSeconds: 5
         resources:
