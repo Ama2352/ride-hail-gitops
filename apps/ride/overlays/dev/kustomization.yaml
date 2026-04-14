@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - ride-db-secret.yaml
 
 # Namespace applied to all resources in this overlay.
 # Format: <service-namespace>-<environment>
