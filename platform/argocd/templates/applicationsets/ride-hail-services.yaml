@@ -32,6 +32,9 @@ spec:
           - appName: user-service-dev
             path: apps/user/overlays/dev
             destNamespace: ride-hailing-dev
+          - appName: ride-service-dev
+            path: apps/ride/overlays/dev
+            destNamespace: ride-hailing-dev
   template:
     metadata:
       name: '{{ "{{appName}}" }}'
