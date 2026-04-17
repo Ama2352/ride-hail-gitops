@@ -48,3 +48,21 @@ spec:
       maxEjectionPercent: 50
   subsets:
     - name: v1
+---
+# =============================================================================
+# PostgreSQL - Istio DestinationRule
+# Force plain TCP to in-cluster postgres to avoid TLS origination/cert validation
+# against a DB that is not configured with Istio-compatible certs.
+# =============================================================================
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: postgres-disable-tls
+spec:
+  host: postgres
+  trafficPolicy:
+    portLevelSettings:
+      - port:
+          number: 5432
+        tls:
+          mode: DISABLE
