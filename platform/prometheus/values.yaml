@@ -196,14 +196,6 @@ serverFiles:
 
 # Custom scrape targets — Jenkins, Istio envoy sidecars, Istio control plane.
 extraScrapeConfigs: |
-  - job_name: 'jenkins'
-    metrics_path: /prometheus
-    scheme: http
-    static_configs:
-      - targets: ['jenkins.jenkins.svc.cluster.local:8080']
-        labels:
-          service: jenkins
-          namespace: jenkins
 
   - job_name: 'envoy-stats'
     metrics_path: /stats/prometheus
