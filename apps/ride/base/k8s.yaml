@@ -73,10 +73,10 @@ metadata:
   labels:
     app: ride-service
 spec:
+  type: ClusterIP
   selector:
     app: ride-service
   ports:
   - name: http
-    port: 8080
+    port: 80
     targetPort: http
-  type: ClusterIP

@@ -21,7 +21,7 @@ spec:
         - destination:
             host: ride-service
             port:
-              number: 8080
+              number: 80
 ---
 # =============================================================================
 # Ride Service - Istio DestinationRule
