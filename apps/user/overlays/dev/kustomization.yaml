@@ -9,4 +9,4 @@ resources:
 
 images:
   - name: docker.io/ama2352/user-service
-    newTag: "44-5e123b10"
+    newTag: "45-da458845"
