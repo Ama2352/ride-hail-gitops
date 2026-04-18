@@ -33,9 +33,9 @@ spec:
             secretKeyRef:
               name: ride-db-credentials
               key: password
-        - name: SPRING_REDIS_HOST
+        - name: SPRING_DATA_REDIS_HOST
           value: "redis-master.redis.svc.cluster.local"
-        - name: SPRING_REDIS_PORT
+        - name: SPRING_DATA_REDIS_PORT
           value: "6379"
         - name: PORT
           value: "8082"
