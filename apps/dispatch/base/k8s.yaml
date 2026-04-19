@@ -25,7 +25,7 @@ spec:
           image: docker.io/ama2352/dispatch-service:latest
           imagePullPolicy: Always
           ports:
-            - name: http
+            - name: metrics
               containerPort: 8080
           env:
             - name: PORT
@@ -83,6 +83,6 @@ spec:
   selector:
     app: dispatch-service
   ports:
-    - name: http
+    - name: metrics
       port: 80
-      targetPort: http
+      targetPort: metrics

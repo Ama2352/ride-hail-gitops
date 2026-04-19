@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ride-service
+  labels:
+    app: ride-service
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchLabels:
+      app: ride-service
+  endpoints:
+    - port: metrics
+      interval: 15s
+      path: /actuator/prometheus
+      scheme: http

@@ -6,6 +6,7 @@ namespace: default
 resources:
 - k8s.yaml
 - istio.yaml
+- servicemonitor.yaml
 
 commonLabels:
   app: ride-service

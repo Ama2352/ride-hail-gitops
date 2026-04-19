@@ -28,7 +28,7 @@ spec:
           image: docker.io/ama2352/notification-service:latest
           imagePullPolicy: Always
           ports:
-            - name: http
+            - name: metrics
               containerPort: 8080
           
           env:
@@ -80,6 +80,6 @@ spec:
   selector:
     app: notification-service
   ports:
-    - name: http
+    - name: metrics
       port: 80
-      targetPort: http
+      targetPort: metrics

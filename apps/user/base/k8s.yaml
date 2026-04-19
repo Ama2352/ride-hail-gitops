@@ -21,7 +21,7 @@ spec:
           image: docker.io/ama2352/user-service:latest
           imagePullPolicy: Always
           ports:
-            - name: http
+            - name: metrics
               containerPort: 8081
           env:
             - name: PORT
@@ -67,6 +67,6 @@ spec:
   selector:
     app: user-service
   ports:
-    - name: http
+    - name: metrics
       port: 80
-      targetPort: http
+      targetPort: metrics

@@ -18,7 +18,7 @@ spec:
         image: docker.io/ama2352/ride-service:latest
         imagePullPolicy: IfNotPresent
         ports:
-        - name: http
+        - name: metrics
           containerPort: 8082
         env:
         - name: SPRING_DATASOURCE_URL
@@ -77,6 +77,6 @@ spec:
   selector:
     app: ride-service
   ports:
-  - name: http
+  - name: metrics
     port: 80
-    targetPort: http
+    targetPort: metrics

@@ -1,4 +1,16 @@
 # Prometheus Helm values — monitoring namespace, NodePort 30909.
+prometheus:
+  prometheusSpec:
+    scrapeInterval: 15s
+    serviceMonitorSelector: {}
+    serviceMonitorNamespaceSelector: {}
+    podMonitorSelector: {}
+    podMonitorNamespaceSelector: {}
+
+prometheusOperator:
+  enabled: true
+  manageCrds: true
+
 server:
   image:
     tag: "v2.53.0"
@@ -194,7 +206,7 @@ serverFiles:
       #         summary: "Slack notification test alert"
       #         description: "This is a manual test alert to verify Alertmanager -> Slack delivery."
 
-# Custom scrape targets — Jenkins, Istio envoy sidecars, Istio control plane.
+# Custom scrape targets kept during migration while ServiceMonitor/PodMonitor run in parallel.
 extraScrapeConfigs: |
 
   - job_name: 'envoy-stats'
