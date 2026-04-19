@@ -7,7 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/part-of: ride-hail-platform
   annotations:
-    argocd.argoproj.io/sync-wave: "0"  # after local-path-provisioner (wave -3)
+    argocd.argoproj.io/sync-wave: "0"  # after CRDs (wave -1) and local-path-provisioner (wave -3)
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
