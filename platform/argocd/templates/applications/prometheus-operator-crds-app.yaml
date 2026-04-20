@@ -33,3 +33,5 @@ spec:
       - CreateNamespace=true
       # CRDs are large; use server-side apply to avoid oversized last-applied annotations.
       - ServerSideApply=true
+      # Fallback for clusters with legacy oversized last-applied annotations on CRDs.
+      - Replace=true
