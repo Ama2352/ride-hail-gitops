@@ -139,25 +139,6 @@ kube-state-metrics:
   # Feeds Kubernetes object-state metrics used by workload alerts/dashboards.
   enabled: true
 
-# Scrape configs with relabeling to capture node names for friendly display
-  scrapeConfigs:
-    - job_name: 'prometheus-node-exporter'
-      kubernetes_sd_configs:
-        - role: endpoints
-      relabel_configs:
-        # Select only node-exporter targets
-        - source_labels: [__meta_kubernetes_service_name]
-          action: keep
-          regex: 'prometheus-node-exporter'
-        # Extract node name from pod spec
-        - source_labels: [__meta_kubernetes_pod_node_name]
-          target_label: node
-          action: replace
-        # Keep the instance label for backward compatibility
-        - source_labels: [__address__]
-          target_label: instance
-          action: replace
-
 # Base alert rules for infra and workload health.
 serverFiles:
   alerting_rules.yml:
