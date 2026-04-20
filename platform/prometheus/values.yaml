@@ -1,23 +1,12 @@
-# Prometheus Helm values — monitoring namespace, NodePort 30909.
-prometheus:
-  prometheusSpec:
-    scrapeInterval: 15s
-    serviceMonitorSelector: {}
-    serviceMonitorNamespaceSelector: {}
-    podMonitorSelector: {}
-    podMonitorNamespaceSelector: {}
-
-prometheusOperator:
-  enabled: true
-  manageCrds: true
-
 server:
   image:
     tag: "v2.53.0"
 
+  # Core trade-off knob: shorter retention reduces disk usage but limits history.
   retention: "6h"   # short retention for resource-constrained cluster
 
   global:
+    # Global cadence for all scrape jobs unless overridden by endpoint settings.
     scrape_interval: 15s
     evaluation_interval: 15s
     external_labels:
@@ -59,6 +48,7 @@ server:
 
 # Node Exporter — DaemonSet covers all nodes including master (standard for observability agents).
 prometheus-node-exporter:
+  # Required so each pod can expose host metrics from its node directly.
   hostNetwork: true
   hostRootFsMount:
     enabled: true
@@ -146,6 +136,7 @@ alertmanager:
             footer: "Prometheus Alertmanager"
 
 kube-state-metrics:
+  # Feeds Kubernetes object-state metrics used by workload alerts/dashboards.
   enabled: true
 
 # Base alert rules for infra and workload health.
@@ -205,41 +196,3 @@ serverFiles:
       #       annotations:
       #         summary: "Slack notification test alert"
       #         description: "This is a manual test alert to verify Alertmanager -> Slack delivery."
-
-# Custom scrape targets kept during migration while ServiceMonitor/PodMonitor run in parallel.
-extraScrapeConfigs: |
-
-  - job_name: 'envoy-stats'
-    metrics_path: /stats/prometheus
-    kubernetes_sd_configs:
-      - role: pod
-    relabel_configs:
-      - source_labels: [__meta_kubernetes_pod_container_port_name]
-        action: keep
-        regex: '.*-envoy-prom'
-      - source_labels: [__meta_kubernetes_namespace]
-        action: replace
-        target_label: namespace
-      - source_labels: [__meta_kubernetes_pod_name]
-        action: replace
-        target_label: pod
-      - source_labels: [__meta_kubernetes_pod_label_app]
-        action: replace
-        target_label: app
-
-  - job_name: 'istio-control-plane'
-    kubernetes_sd_configs:
-      - role: endpoints
-        namespaces:
-          names:
-            - istio-system
-    relabel_configs:
-      - source_labels: [__meta_kubernetes_service_name, __meta_kubernetes_endpoint_port_name]
-        action: keep
-        regex: istiod;http-monitoring
-      - source_labels: [__meta_kubernetes_namespace]
-        action: replace
-        target_label: namespace
-      - source_labels: [__meta_kubernetes_pod_name]
-        action: replace
-        target_label: pod

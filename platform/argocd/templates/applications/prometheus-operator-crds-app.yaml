@@ -7,6 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/part-of: ride-hail-platform
   annotations:
+    # Automation trigger: ensure CRDs are created first so later SM/PM manifests are valid.
     argocd.argoproj.io/sync-wave: "-1"  # must exist before ServiceMonitor/PodMonitor resources
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -30,3 +31,5 @@ spec:
       prune: true
     syncOptions:
       - CreateNamespace=true
+      # CRDs are large; use server-side apply to avoid oversized last-applied annotations.
+      - ServerSideApply=true

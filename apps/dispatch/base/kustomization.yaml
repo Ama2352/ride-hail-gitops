@@ -4,4 +4,5 @@ kind: Kustomization
 resources:
   - k8s.yaml
   - istio.yaml
+  # Automation trigger: ServiceMonitor is deployed with the app in the same sync.
   - servicemonitor.yaml

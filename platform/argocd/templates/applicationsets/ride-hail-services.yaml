@@ -9,6 +9,7 @@ metadata:
     app.kubernetes.io/part-of: ride-hail-services
 spec:
   generators:
+    # Automation trigger: one list item => one ArgoCD Application generated automatically.
     - list:
         elements:
           - appName: dispatch-service-dev
@@ -53,11 +54,14 @@ spec:
         server: https://kubernetes.default.svc
         namespace: '{{ "{{destNamespace}}" }}'
       syncPolicy:
+        # Automation trigger: each generated app is continuously reconciled from Git.
         automated:
           selfHeal: true
           prune: true
         managedNamespaceMetadata:
           labels:
+            # Automation trigger: new namespaces get sidecar injection label automatically.
             istio-injection: enabled
         syncOptions:
+          # Automation trigger: namespaces are created on-the-fly.
           - CreateNamespace=true

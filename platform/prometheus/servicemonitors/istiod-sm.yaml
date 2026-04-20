@@ -6,13 +6,18 @@ metadata:
   labels:
     prometheus: kube-prometheus
 spec:
+  # Automation trigger: Prometheus auto-discovers endpoints by service labels.
+  # Discover only the istiod service; keeps control-plane scrape stable.
   selector:
     matchLabels:
       app: istiod
   namespaceSelector:
+    # Istiod runs in istio-system, not app namespaces.
     matchNames:
       - istio-system
   endpoints:
+    # Automation trigger: once discovered, scrape starts automatically every interval.
+    # Metrics endpoint exposed by Istiod service.
     - port: http-monitoring
       interval: 15s
       scheme: http

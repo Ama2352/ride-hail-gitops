@@ -1,0 +1,38 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: prometheus-node-exporter
+  namespace: monitoring
+  labels:
+    prometheus: kube-prometheus
+    app.kubernetes.io/name: prometheus-node-exporter
+spec:
+  # Auto-discovery trigger: Select node-exporter service by label.
+  # Prometheus discovers service endpoints automatically.
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus-node-exporter
+
+  namespaceSelector:
+    matchNames:
+      - monitoring
+
+  endpoints:
+    - port: metrics
+      interval: 15s
+      scheme: http
+
+      # LABEL RELABELING: Transform instance from IP:9100 → node_hostname
+      # This allows dashboard Host variable to show VM names instead of IPs.
+      relabelings:
+        # Extract node hostname from Kubernetes pod label (auto-injected by kubelet).
+        # kubernetes.io/hostname = actual node/VM name (e.g., k8s-master, k8s-worker-1).
+        # This label is automatically added by Kubernetes to every pod.
+        - source_labels: [__meta_kubernetes_pod_label_kubernetes_io_hostname]
+          target_label: instance
+          # Action: replace (default). Overwrites __address__-derived instance with hostname.
+
+        # Preserve original IP for debugging (optional).
+        # Uncomment if you need to keep IP in a separate label.
+        # - source_labels: [__address__]
+        #   target_label: instance_ip

@@ -74,25 +74,10 @@ dashboardProviders:
 # Pre-import Grafana Dashboard IDs directly via Helm's download-dashboards initContainer
 dashboards:
   default:
-    # Istio Mesh Dashboard (Dashboard ID: 7639)
-    istio-mesh:
-      gnetId: 7639
-      revision: 1
-      datasource: Prometheus
-    # K8S Dashboard (Dashboard ID: 15661)
-    k8s-dashboard:
-      gnetId: 15661
-      revision: 1
-      datasource: Prometheus
     # Example 1: Node Exporter Full (Dashboard ID: 1860)
     node-exporter:
       gnetId: 1860
       revision: 33
-      datasource: Prometheus
-    # Kubernetes cluster monitoring (Dashboard ID: 315)
-    k8s-cluster-monitoring:
-      gnetId: 315
-      revision: 1
       datasource: Prometheus
     # Example 2: Go Processes / Application Metrics (Dashboard ID: 10826)
     go-metrics:

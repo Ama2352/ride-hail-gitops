@@ -5,7 +5,7 @@ namespace: ride-hailing-dev
 
 resources:
   - ../../base
-  - sealed-secrets.yaml
+  - sealed-secrets/rsa-keys.yaml
 
 images:
   - name: docker.io/ama2352/user-service

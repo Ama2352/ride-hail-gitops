@@ -3,7 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../base
-  - ride-db-secret.yaml
+  - sealed-secrets/ride-db-credentials.yaml
   - postgres.yaml
 
 # Namespace applied to all resources in this overlay.

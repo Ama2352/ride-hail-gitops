@@ -6,13 +6,18 @@ metadata:
   labels:
     prometheus: kube-prometheus
 spec:
+  # Automation trigger: Prometheus auto-discovers matching pods across selected namespaces.
+  # Empty selector means "all pods" in selected namespaces; endpoint port filters real targets.
   selector: {}
   podMetricsEndpoints:
+    # Automation trigger: each matching pod is scraped automatically every interval.
+    # Istio sidecar admin/prometheus endpoint.
     - targetPort: 15090
       path: /stats/prometheus
       interval: 15s
       scheme: http
   namespaceSelector:
+    # Restrict discovery scope to app namespaces only.
     matchNames:
       - ride-hailing-dev
       - ride-hailing-test
