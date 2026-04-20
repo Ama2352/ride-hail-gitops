@@ -14,9 +14,7 @@ spec:
   http:
     - match:
         - uri:
-            prefix: "/ride/"
-      rewrite:
-        uri: "/rides"  # Rewrite /ride/health to /health
+            prefix: "/rides"
       route:
         - destination:
             host: ride-service
