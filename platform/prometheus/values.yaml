@@ -21,6 +21,9 @@ server:
 
   extraArgs:
     web.enable-admin-api: ""       # enable admin API for management
+    # Optimize TSDB for lower I/O and memory pressure
+    storage.tsdb.min-block-duration: "2h"
+    storage.tsdb.max-block-duration: "2h"
 
   # NodePort 30909 — ClusterIP port stays at 80 so in-cluster URLs (e.g., Grafana
   # datasource http://prometheus-server.monitoring.svc.cluster.local:80) work.
@@ -36,6 +39,18 @@ server:
     limits:
       cpu: 500m
       memory: 512Mi
+
+  # Readiness/Liveness probe settings to prevent premature restarts during heavy I/O (WAL replay/GC)
+  readinessProbe:
+    initialDelaySeconds: 60
+    periodSeconds: 10
+    timeoutSeconds: 10   # Increase timeout to allow for slow responses under load
+    failureThreshold: 5
+  livenessProbe:
+    initialDelaySeconds: 120
+    periodSeconds: 20
+    timeoutSeconds: 10
+    failureThreshold: 5
 
   # Persistent volume via local-path-provisioner. Prevents WAL corruption on
   # restart and stops the crash-loop that was causing 502 timeouts from Grafana.

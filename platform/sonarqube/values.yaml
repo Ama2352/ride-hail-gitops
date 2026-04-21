@@ -57,8 +57,8 @@ postgresql:
 
 # Readiness and startup probes — allow extra time for SonarQube to initialize.
 readinessProbe:
-  initialDelaySeconds: 60
-  failureThreshold: 6
+  initialDelaySeconds: 120
+  failureThreshold: 10
 startupProbe:
-  initialDelaySeconds: 60
-  failureThreshold: 24 # Cho phép chờ lên đến vài phút
+  initialDelaySeconds: 120
+  failureThreshold: 10
