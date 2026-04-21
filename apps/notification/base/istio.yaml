@@ -14,9 +14,7 @@ spec:
   http:
     - match:
         - uri:
-            prefix: "/notification/"
-      rewrite:
-        uri: "/"  # Rewrite /notification/health to /health
+            prefix: "/notification"
       route:
         - destination:
             host: notification-service

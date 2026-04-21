@@ -10,9 +10,7 @@ spec:
   http:
     - match:
         - uri:
-            prefix: "/user/"
-      rewrite:
-        uri: "/"
+            prefix: "/user"
       route:
         - destination:
             host: user-service
