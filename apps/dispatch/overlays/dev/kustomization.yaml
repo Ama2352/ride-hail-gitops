@@ -11,7 +11,7 @@ namespace: ride-hailing-dev
 # Image tag is updated here by Jenkins CI after each successful build.
 images:
   - name: docker.io/ama2352/dispatch-service
-    newTag: 6-5952233
+    newTag: 8-b948854
 
 commonLabels:
   environment: dev
