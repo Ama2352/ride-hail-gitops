@@ -34,11 +34,11 @@ server:
 
   resources:
     requests:
-      cpu: 150m
-      memory: 256Mi
+      cpu: 200m
+      memory: 512Mi
     limits:
       cpu: 500m
-      memory: 512Mi
+      memory: 1024Mi
 
   # Readiness/Liveness probe settings to prevent premature restarts during heavy I/O (WAL replay/GC)
   readinessProbe:
