@@ -13,10 +13,10 @@ service:
 resources:
   requests:
     cpu: 300m
-    memory: "1024Mi"
-  limits:
-    cpu: 500m
     memory: "1536Mi"
+  limits:
+    cpu: 800m
+    memory: "2048Mi"
 
 # Persistent volume via local-path-provisioner for SonarQube data directory.
 # Preserves analysis history and configuration across pod restarts.
@@ -34,9 +34,9 @@ initSysctl:
 
 # mmap disabled and heap sizes tuned for resource-constrained environments.
 sonarProperties:
-  sonar.search.javaAdditionalOpts: "-Dnode.store.allow_mmap=false -Xms128m -Xmx128m"
-  sonar.web.javaOpts: "-Xms256m -Xmx256m"
-  sonar.ce.javaOpts: "-Xms128m -Xmx128m"
+  sonar.search.javaAdditionalOpts: "-Dnode.store.allow_mmap=false -Xms512m -Xmx512m"
+  sonar.web.javaOpts: "-Xms512m -Xmx512m"
+  sonar.ce.javaOpts: "-Xms256m -Xmx256m"
 
 # Bundled PostgreSQL. Production: use an external managed instance.
 postgresql:
