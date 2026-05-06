@@ -15,8 +15,6 @@ spec:
     - match:
         - uri:
             prefix: "/notification"
-      rewrite:
-        uri: "/"
       route:
         - destination:
             host: notification-service

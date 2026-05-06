@@ -15,8 +15,6 @@ spec:
     - match:
         - uri:
             prefix: "/dispatch"
-      rewrite:
-        uri: "/"
       route:
         - destination:
             host: dispatch-service
