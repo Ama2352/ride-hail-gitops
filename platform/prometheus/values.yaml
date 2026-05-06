@@ -3,7 +3,7 @@ server:
     tag: "v2.53.0"
 
   # Core trade-off knob: shorter retention reduces disk usage but limits history.
-  retention: "6h"   # short retention for resource-constrained cluster
+  retention: "6h" # short retention for resource-constrained cluster
 
   global:
     # Global cadence for all scrape jobs unless overridden by endpoint settings.
@@ -20,7 +20,7 @@ server:
             - prometheus-alertmanager.monitoring.svc.cluster.local:9093
 
   extraArgs:
-    web.enable-admin-api: ""       # enable admin API for management
+    web.enable-admin-api: "" # enable admin API for management
     # Optimize TSDB for lower I/O and memory pressure
     storage.tsdb.min-block-duration: "2h"
     storage.tsdb.max-block-duration: "2h"
@@ -34,17 +34,17 @@ server:
 
   resources:
     requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 300m
+      cpu: 150m
       memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
 
   # Readiness/Liveness probe settings to prevent premature restarts during heavy I/O (WAL replay/GC)
   readinessProbe:
     initialDelaySeconds: 60
     periodSeconds: 10
-    timeoutSeconds: 10   # Increase timeout to allow for slow responses under load
+    timeoutSeconds: 10 # Increase timeout to allow for slow responses under load
     failureThreshold: 5
   livenessProbe:
     initialDelaySeconds: 120
