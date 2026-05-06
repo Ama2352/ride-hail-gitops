@@ -12,11 +12,11 @@ service:
 
 resources:
   requests:
+    cpu: 300m
+    memory: "768Mi"
+  limits:
     cpu: 500m
     memory: "1024Mi"
-  limits:
-    cpu: "1"
-    memory: "2Gi"
 
 # Persistent volume via local-path-provisioner for SonarQube data directory.
 # Preserves analysis history and configuration across pod restarts.

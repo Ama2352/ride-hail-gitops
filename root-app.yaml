@@ -1,8 +1,7 @@
 # Root App of Apps — apply once to bootstrap the platform.
 # Renders the Helm chart at platform/argocd (Applications + ApplicationSets).
 # - ApplicationSet ride-hail-services: dispatch / notification / user (dev|test|prod)
-# - Application sealed-secrets: installs controller in kube-system (sync-wave -3)
-# - Other Applications: Istio, Redis, observability, etc.
+# - Other Applications: Istio, observability, etc.
 #
 #   kubectl apply -f root-app.yaml -n argocd
 apiVersion: argoproj.io/v1alpha1

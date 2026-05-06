@@ -15,26 +15,8 @@ spec:
           - appName: dispatch-service-dev
             path: apps/dispatch/overlays/dev
             destNamespace: ride-hailing-dev
-          - appName: dispatch-service-test
-            path: apps/dispatch/overlays/test
-            destNamespace: ride-hailing-test
-          - appName: dispatch-service-prod
-            path: apps/dispatch/overlays/prod
-            destNamespace: ride-hailing-prod
           - appName: notification-service-dev
             path: apps/notification/overlays/dev
-            destNamespace: ride-hailing-dev
-          - appName: notification-service-test
-            path: apps/notification/overlays/test
-            destNamespace: ride-hailing-test
-          - appName: notification-service-prod
-            path: apps/notification/overlays/prod
-            destNamespace: ride-hailing-prod
-          - appName: user-service-dev
-            path: apps/user/overlays/dev
-            destNamespace: ride-hailing-dev
-          - appName: ride-service-dev
-            path: apps/ride/overlays/dev
             destNamespace: ride-hailing-dev
   template:
     metadata:
@@ -47,7 +29,7 @@ spec:
     spec:
       project: default
       source:
-        repoURL: '{{ .Values.repoURL }}'
+        repoURL: "{{ .Values.repoURL }}"
         targetRevision: main
         path: '{{ "{{path}}" }}'
       destination:

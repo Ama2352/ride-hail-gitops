@@ -16,11 +16,11 @@ service:
 
 resources:
   requests:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 50m
+    memory: 64Mi
   limits:
-    cpu: 200m
-    memory: 256Mi
+    cpu: 150m
+    memory: 192Mi
 
 # Persistent volume via local-path-provisioner for dashboard/config storage.
 persistence:

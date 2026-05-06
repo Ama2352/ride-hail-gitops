@@ -36,8 +36,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.labels['version']
-            - name: REDIS_ADDR
-              value: "redis-master.redis.svc.cluster.local:6379"
           
           resources:
             requests:

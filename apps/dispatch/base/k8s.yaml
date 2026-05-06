@@ -32,14 +32,6 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.labels['version']
-            - name: PUBLIC_KEY_PATH
-              value: "/etc/keys/public.pem"
-            - name: REDIS_ADDR
-              value: "redis-master.redis.svc.cluster.local:6379"
-          volumeMounts:
-            - name: keys-volume
-              mountPath: /etc/keys
-              readOnly: true
           resources:
             requests:
               cpu: 50m
@@ -63,10 +55,6 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 3
             failureThreshold: 3
-      volumes:
-        - name: keys-volume
-          secret:
-            secretName: rsa-keys
 ---
 apiVersion: v1
 kind: Service
